@@ -5,7 +5,7 @@ import translations from "../translation";
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState("en"); // Varsayılan dil
+  const [language, setLanguage] = useState("tr"); // Varsayılan dil tr
 
   // Dili değiştir
   const toggleLanguage = () => {
@@ -13,7 +13,9 @@ export const LanguageProvider = ({ children }) => {
   };
 
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t: translations[language] }}>
+    <LanguageContext.Provider
+      value={{ language, toggleLanguage, t: translations[language] }}
+    >
       {children}
     </LanguageContext.Provider>
   );

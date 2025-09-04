@@ -3,6 +3,7 @@ import FirstLook from "./components/firstLook";
 import Profile from "./components/profile";
 import Projects from "./components/projects";
 import Contact from "./components/contact";
+import Footer from "./components/Footer";
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -35,6 +36,7 @@ function App() {
       </section>
       <Projects />
       <Contact />
+      <Footer />
     </>
   );
 }
