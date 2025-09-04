@@ -15,15 +15,18 @@ function TestAPI() {
       })
       .catch((error) => {
         console.error("GET hatası:", error);
-      }); 
+      });
   };
 
   useEffect(() => {
     axios
-      .post(API_URL, { phoneNumber:"05541392582",email:"berna.kocalar@gmail.com"})
+      .post(API_URL, {
+        phoneNumber: "05541392582",
+        email: "berna.kocalar@gmail.com",
+      })
       .then(() => {
         console.log("Yeni kullanıcı eklendi!");
-        fetchUsers(); 
+        fetchUsers();
       })
       .catch((error) => {
         console.error("POST hatası:", error);
@@ -31,18 +34,24 @@ function TestAPI() {
   }, []);
 
   return (
-    <div>
-      <ul>
-      <li key={users[3]?.id}>
-  <a href={`mailto:${users[3]?.email}`} className="text-[#4731D3] hover:text-gray-800 font-bold">
-     {users[3]?.email}
-  </a>
-</li>
-<li key={users[3]?.id}>
-  <a href="https://wa.me/905541392582" className="text-[#4731D3] hover:text-gray-800 font-bold">
-    {users[3]?.phoneNumber} 
-  </a>
-</li>
+    <div className="w-full">
+      <ul className="space-y-1 text-sm md:text-base">
+        <li key={users[3]?.id}>
+          <a
+            href={`mailto:${users[3]?.email}`}
+            className="text-emerald-300 hover:text-white font-semibold break-all"
+          >
+            {users[3]?.email}
+          </a>
+        </li>
+        <li key={users[3]?.id}>
+          <a
+            href="https://wa.me/905541392582"
+            className="text-emerald-300 hover:text-white font-semibold break-all"
+          >
+            {users[3]?.phoneNumber}
+          </a>
+        </li>
       </ul>
     </div>
   );

@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
-import FirstLook from './components/firstLook'
-import Profile from './components/profile'
-import Projects from './components/projects'
-import Skills from './components/skills'
-import Contact from './components/contact';
+import { useEffect, useState } from "react";
+import FirstLook from "./components/firstLook";
+import Profile from "./components/profile";
+import Projects from "./components/projects";
+import Contact from "./components/contact";
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -12,25 +11,32 @@ function App() {
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
     } else {
       document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
-  const mediumImg = "/assets/animationImg.png";
-  const githubIcon = "/assets/github.png"
-  const linkedinIcon = "/assets/linkedin.png"
-  const myImage = "/assets/IMG_E3560.JPG"
-  const pizzaImg = "/assets/pizza.png"
-  const nestForYouImg = "/assets/nestForYou.png"
+
+  useEffect(() => {
+    const html = document.documentElement;
+    html.style.scrollBehavior = "smooth";
+    return () => {
+      html.style.scrollBehavior = "";
+    };
+  }, []);
+
   return (
     <>
-     <FirstLook myImage={myImage} mediumImg={mediumImg} githubIcon={githubIcon} linkedinIcon={linkedinIcon} darkMode={darkMode} setDarkMode={setDarkMode}/>
-     <Skills/>
-     <Profile mediumImg={mediumImg}/>
-     <Projects pizzaImg={pizzaImg} nestForYouImg={nestForYouImg} mediumImg={mediumImg}/>
-     <Contact/>
+      <a id="top" />
+      <FirstLook darkMode={darkMode} setDarkMode={setDarkMode} />
+      <section id="about">
+        <Profile />
+      </section>
+      <Projects />
+      <Contact />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
