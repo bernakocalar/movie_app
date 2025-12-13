@@ -2,8 +2,8 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getMovieDetails } from "../services/omdb";
 import { useAuth } from "../context/AuthContext";
-// import { db } from "../services/firebase"; // Will use for comments later
-import { Star, Calendar, Clock, MessageSquare, Plus } from "lucide-react";
+import { addComment, getCommentsForMovie, addToArchive } from "../services/repository";
+import { Star, Calendar, Clock, MessageSquare, Plus, Check } from "lucide-react";
 
 export default function MovieDetails() {
     const { id } = useParams();
@@ -11,29 +11,40 @@ export default function MovieDetails() {
     const [movie, setMovie] = useState(null);
     const [loading, setLoading] = useState(true);
     const [comment, setComment] = useState("");
-    const [comments, setComments] = useState([]); // Placeholder for comments
+    const [comments, setComments] = useState([]);
+    const [isPrivate, setIsPrivate] = useState(false);
+    const [archived, setArchived] = useState(false);
 
     useEffect(() => {
         const fetchDetails = async () => {
             const data = await getMovieDetails(id);
             setMovie(data);
+
+            // Load comments
+            const movieComments = await getCommentsForMovie(id);
+            setComments(movieComments);
+
             setLoading(false);
         };
         fetchDetails();
     }, [id]);
 
-    const handleAddComment = (e) => {
+    const handleAddComment = async (e) => {
         e.preventDefault();
-        if (!comment.trim()) return;
-        // TODO: Save to Firestore
-        const newComment = {
-            id: Date.now(),
-            text: comment,
-            user: currentUser?.email || "Anonymous",
-            date: new Date().toLocaleDateString()
-        };
-        setComments([...comments, newComment]);
+        if (!comment.trim() || !currentUser) return;
+
+        await addComment(currentUser, movie, comment, isPrivate);
+
+        // Refresh comments
+        const updated = await getCommentsForMovie(id);
+        setComments(updated);
         setComment("");
+    };
+
+    const handleArchive = async () => {
+        if (!currentUser) return;
+        await addToArchive(currentUser, movie);
+        setArchived(true);
     };
 
     if (loading) return <div className="text-white text-center p-10">Loading details...</div>;
@@ -76,8 +87,12 @@ export default function MovieDetails() {
                         </div>
 
                         {currentUser && (
-                            <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold flex items-center gap-2 transition">
-                                <Plus size={20} /> Add to Archive
+                            <button
+                                onClick={handleArchive}
+                                disabled={archived}
+                                className={`px - 6 py - 3 rounded - lg font - bold flex items - center gap - 2 transition ${archived ? "bg-green-600 cursor-default" : "bg-red-600 hover:bg-red-700 text-white"} `}
+                            >
+                                {archived ? <><Check size={20} /> Archived</> : <><Plus size={20} /> Add to Archive</>}
                             </button>
                         )}
                     </div>
@@ -100,7 +115,13 @@ export default function MovieDetails() {
                             />
                             <div className="flex justify-between items-center mt-2">
                                 <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-400">
-                                    <input type="checkbox" className="accent-red-600" /> Private Comment
+                                    <input
+                                        type="checkbox"
+                                        checked={isPrivate}
+                                        onChange={(e) => setIsPrivate(e.target.checked)}
+                                        className="accent-red-600"
+                                    />
+                                    Private Comment (Only visible to you)
                                 </label>
                                 <button type="submit" className="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded text-white transition">
                                     Post Comment
@@ -118,10 +139,11 @@ export default function MovieDetails() {
                             comments.map(c => (
                                 <div key={c.id} className="border-b border-gray-800 pb-4">
                                     <div className="flex justify-between mb-2">
-                                        <span className="font-bold text-red-500">{c.user}</span>
-                                        <span className="text-xs text-gray-500">{c.date}</span>
+                                        <span className="font-bold text-red-500">{c.userEmail}</span>
+                                        <span className="text-xs text-gray-500">{new Date(c.createdAt).toLocaleDateString()}</span>
                                     </div>
                                     <p className="text-gray-300">{c.text}</p>
+                                    {c.isPrivate && <span className="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded mt-2 inline-block">Private</span>}
                                 </div>
                             ))
                         ) : (
