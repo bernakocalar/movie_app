@@ -1,43 +1,26 @@
-import { useEffect, useState } from "react";
-import FirstLook from "./components/firstLook";
-import Profile from "./components/profile";
-import Projects from "./components/projects";
-import Contact from "./components/contact";
-import Footer from "./components/Footer";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import MovieDetails from "./pages/MovieDetails";
+import Profile from "./pages/Profile";
 
 function App() {
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [darkMode]);
-
-  useEffect(() => {
-    const html = document.documentElement;
-    html.style.scrollBehavior = "smooth";
-    return () => {
-      html.style.scrollBehavior = "";
-    };
-  }, []);
-
   return (
-    <>
-      <a id="top" />
-      <FirstLook darkMode={darkMode} setDarkMode={setDarkMode} />
-      <section id="about">
-        <Profile />
-      </section>
-      <Projects />
-      <Contact />
-      <Footer />
-    </>
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-950 font-sans text-white">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/movie/:id" element={<MovieDetails />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
