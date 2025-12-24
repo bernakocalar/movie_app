@@ -1,4 +1,4 @@
-const API_KEY = import.meta.env.VITE_OMDB_API_KEY || "d1f7c35a"; // Fallback key for demo
+const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
 const BASE_URL = `https://www.omdbapi.com/`;
 
 export const searchMovies = async (query, page = 1) => {
