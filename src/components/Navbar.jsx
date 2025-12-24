@@ -26,7 +26,7 @@ export default function Navbar() {
         <nav className="bg-gray-950/90 backdrop-blur-md border-b border-gray-800 text-white p-4 sticky top-0 z-50">
             <div className="max-w-6xl mx-auto flex justify-between items-center">
                 <Link to="/" className="flex items-center gap-2 text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-500 hover:opacity-80 transition-opacity">
-                    <Film className="text-orange-500" /> MovieVault
+                    <Film className="text-orange-500" /> NestForYou
                 </Link>
                 <div className="flex items-center gap-4">
                     <button
