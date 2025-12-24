@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import { auth } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
     const [isLogin, setIsLogin] = useState(true);
@@ -10,6 +11,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const { mockLogin, isConfigured } = useAuth(); // Added useAuth hook
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -34,49 +36,51 @@ export default function Login() {
 
     return (
         <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-            <div className="bg-gray-900 border border-gray-800 p-8 rounded-lg shadow-xl w-full max-w-md">
-                <h2 className="text-3xl font-bold text-white mb-6 text-center">
-                    {isLogin ? "Welcome Back" : "Create Account"}
+            <div className="bg-gray-900/50 backdrop-blur-lg border border-gray-800 p-10 rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-yellow-500"></div>
+
+                <h2 className="text-4xl font-black text-white mb-8 text-center tracking-tight">
+                    {isLogin ? t('welcome_back') : t('create_account')}
                 </h2>
 
-                {error && <div className="bg-red-500/20 text-red-400 p-3 rounded mb-4 text-sm">{error}</div>}
+                {error && <div className="bg-red-900/20 border border-red-500/50 text-red-300 p-4 rounded-lg mb-6 text-sm flex items-center gap-2">⚠️ {error}</div>}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
-                        <label className="block text-gray-400 mb-1 text-sm">Email</label>
+                        <label className="block text-gray-400 mb-2 text-sm font-medium">{t('email')}</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full bg-gray-800 border-gray-700 rounded p-2 text-white focus:border-red-600 focus:outline-none"
+                            className="w-full bg-gray-800/80 border border-gray-700 rounded-lg p-3 text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none transition-all"
                             required
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-400 mb-1 text-sm">Password</label>
+                        <label className="block text-gray-400 mb-2 text-sm font-medium">{t('password')}</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full bg-gray-800 border-gray-700 rounded p-2 text-white focus:border-red-600 focus:outline-none"
+                            className="w-full bg-gray-800/80 border border-gray-700 rounded-lg p-3 text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none transition-all"
                             required
                         />
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded transition"
+                        className="w-full bg-gradient-to-r from-orange-600 to-yellow-500 hover:from-orange-700 hover:to-yellow-600 text-white font-bold py-3 rounded-lg shadow-lg transform active:scale-95 transition-all text-lg"
                     >
-                        {isLogin ? "Sign In" : "Sign Up"}
+                        {isLogin ? t('sign_in') : t('sign_up')}
                     </button>
                 </form>
 
-                <p className="mt-4 text-center text-gray-400 text-sm">
-                    {isLogin ? "Don't have an account? " : "Already have an account? "}
+                <p className="mt-8 text-center text-gray-500 text-sm">
+                    {isLogin ? t('dont_have_account') : t('already_have_account')}
                     <button
                         onClick={() => setIsLogin(!isLogin)}
-                        className="text-red-500 hover:underline"
+                        className="text-orange-500 hover:text-orange-400 font-bold hover:underline ml-1"
                     >
-                        {isLogin ? "Sign Up" : "Sign In"}
+                        {isLogin ? t('sign_up') : t('sign_in')}
                     </button>
                 </p>
             </div>
